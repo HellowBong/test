@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEvent, Dispatch, SetStateAction } from 'react'
 import './style.css';
 import { StringLiteral } from 'typescript';
 
@@ -7,6 +7,8 @@ interface Props {
   label: string;
   type: 'text' | 'password';
   placeholder: string;
+  value: string;
+  setValue: Dispatch<SetStateAction<string>>;
   icon?: string;
   errorMessage?: string;
   onButtonClick?: () => void;
@@ -16,19 +18,24 @@ interface Props {
 export default function InputBox(props: Props) {
 
   //          state: Properties          //
-  const { label, type, placeholder, icon, errorMessage } = props;
-  const { onButtonClick } = props;
+  const { label, type, placeholder, value, icon, errorMessage } = props;
+  const { setValue, onButtonClick } = props;
+
+  //          event handler: input 값 변경 이벤트 처리          //
+  const onInputValueChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setValue(value);
+  }
 
   //          render: Input 상자 렌더링          //
   return (
     <div className='inputbox'>
       <div className='inputbox-label'>{label}</div>
       <div className={errorMessage ? 'inputbox-container-error' : 'inputbox-container'}>
-        <input className='input' type={type} placeholder={placeholder} />
+        <input className='input' type={type} placeholder={placeholder} value={value} onChange={onInputValueChangeHandler} />
         { onButtonClick !== undefined && (
           <div className='icon-button' onClick={onButtonClick}>
-            {icon}
-            <div className='right-arrow-icon'></div>
+            {icon !== undefined && <div className={icon}></div>}
           </div>
         )}
       </div>
@@ -41,70 +48,60 @@ export default function InputBox(props: Props) {
 
 
 
-=============================================style=====================================================
 
 
 
-.inputbox {
-    margin: 20px 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==========================================================
+
+
+
+
+
+
+
+
+
+
+
+import React, { useState } from 'react';
+import './App.css';
+import InputBox from 'components/InputBox';
+
+function App() {
+
+  const [email, setEmail] = useState<string>('');
+
+  return (
+    <>
+      <InputBox label='이메일 주소' type='text' placeholder='이메일 주소를 입력해주세요.' value={email} setValue={setEmail} />
+    </>
+  );
 }
 
-.inputbox-label {
-    margin-bottom: 5px;
-    color: rgba(0, 0, 0, 0.7);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 140%;
-}
+export default App;
 
-.inputbox-container {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-    padding: 11px 16px 11px 0;
-
-    display: flex;
-    align-items: center;
-}
-
-.inputbox-container-error {
-    border-bottom: 1px solid rgba(255, 0, 0, 0.7);
-    padding: 11px 16px 11px 0;
-    
-    display: flex;
-    align-items: center;
-
-    background-color: rgba(250, 250, 250, 1);
-}
-
-.input {
-    border: none;
-    background: none;
-    outline: none;
-
-    flex: 1;
-
-    color: rgba(0, 0, 0, 0.7);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 140%;
-}
-
-.inputbox-message {
-    margin-top: 5px;
-
-    color: rgba(255, 0, 0, 0.7);
-    font-size: 10px;
-    font-weight: 400;
-    line-height: 140%;
-}
-
-.icon-button {
-    border-radius: 50% 50%;
-    width: 24px;
-    height: 24px;
-}
-
-.icon-button:hover {
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
+// ! 네비게이션 설계
+// ! 메인 화면 : '/' - Main
+// ! 로그인 화면 + 회원가입 화면 : /auth - Authentication
+// ! 검색 화면 : '/search/:word' - Search
+// ! 게시물 상세 보기 화면 : '/board/detail/:boardNumber' - BoardDetail
+// ! 게시물 작성 화면 : '/board/write' - BoardWrite
+// ! 게시물 수정 화면 : '/board/update/:boardNumber' - BoardUpdate
+// ! 유저 게시물 화면 : '/user/:email' - User
