@@ -12,13 +12,18 @@ export default function User() {
       <div id='user-info-wrapper'>
         <div className='user-info-container'>
           <div className='user-info-profile-image-box'>
+            <div className='user-info-profile-default-image'>
+              <div className='user-info-profile-icon-box'>
+                <div className='image-box-white-icon'></div>
+              </div>
+            </div>
             <div className='user-info-profile-image'></div>
           </div>
           <div className='user-info-meta-box'>
             <div className='user-info-nickname-box'>
               <div className='user-info-nickname'></div>
               <div className='icon-button'>
-                <div className='image-box-white-icon'></div>
+                <div className='edit-light-icon'></div>
               </div>
             </div>
             <div className='user-info-email'></div>
